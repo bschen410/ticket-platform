@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# 已存在的檔案（CSS / JS / img）直接走
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 其餘全部交給 index.php
+RewriteRule ^ index.php [QSA,L]
