@@ -54,12 +54,19 @@ $routes = [
     // ...
 ];
 
-// 簡易 autoload：依 class 名稱載入 src/Controllers / src/Models
+// 簡易 autoload：依 class 名稱找 src/Controllers/、src/Models/
+// 例：HomeController         → src/Controllers/HomeController.php
+//     User                   → src/Models/User.php
+//     Admin\ConcertController → src/Controllers/Admin/ConcertController.php
 spl_autoload_register(function (string $class): void {
     $base = dirname(__DIR__) . '/src/';
-    $path = $base . str_replace('\\', '/', $class) . '.php';
-    if (is_file($path)) {
-        require_once $path;
+    $relative = str_replace('\\', '/', $class) . '.php';
+    foreach (['Controllers/', 'Models/', ''] as $subdir) {
+        $path = $base . $subdir . $relative;
+        if (is_file($path)) {
+            require_once $path;
+            return;
+        }
     }
 });
 

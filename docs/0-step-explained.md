@@ -152,19 +152,28 @@ require_once __DIR__ . '/../src/helpers/auth.php';
 
 所有頁面都吃到這些 helper。
 
-#### (2) 自動載入 Controller class
+#### (2) 自動載入 Controller / Model class
 
 ```php
 spl_autoload_register(function (string $class): void {
     $base = dirname(__DIR__) . '/src/';
-    $path = $base . str_replace('\\', '/', $class) . '.php';
-    if (is_file($path)) require_once $path;
+    $relative = str_replace('\\', '/', $class) . '.php';
+    foreach (['Controllers/', 'Models/', ''] as $subdir) {
+        $path = $base . $subdir . $relative;
+        if (is_file($path)) { require_once $path; return; }
+    }
 });
 ```
 
-之後寫 `new AuthController()` 時自動找 `src/AuthController.php`，寫 `new Admin\ConcertController()` 自動找 `src/Admin/ConcertController.php`。**組員不用每次都 require**。
+對應規則：
 
-> 注意：實際的 controller 檔放在 `src/Controllers/HomeController.php`，但 autoload 是用 class 全名直接對應路徑。後續若採用 namespace（如 `App\Controllers\HomeController`）會更乾淨，但為了簡單起見目前不用 namespace。
+| 寫 | 自動找 |
+|---|---|
+| `new HomeController()` | `src/Controllers/HomeController.php` |
+| `new User()` | `src/Models/User.php` |
+| `new Admin\ConcertController()` | `src/Controllers/Admin/ConcertController.php` |
+
+**組員不用每次都 require**，只要把檔案放對位置（controller 進 `Controllers/`、model 進 `Models/`）即可。
 
 #### (3) 路由表（重點！）
 
