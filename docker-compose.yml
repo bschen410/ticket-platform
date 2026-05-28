@@ -1,0 +1,39 @@
+services:
+  app:
+    build: ./docker
+    container_name: ticket-app
+    command: php -S 0.0.0.0:8000 -t public public/index.php
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/var/www/html:Z
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: ticket_platform
+      DB_USER: root
+      DB_PASS: secret
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: ticket-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: ticket_platform
+    ports:
+      - "3307:3306"  # host 用 3307 避免跟本機 MySQL 衝突；container 內仍是 3306
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro,Z
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro,Z
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:
