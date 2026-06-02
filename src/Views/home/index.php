@@ -56,10 +56,7 @@
     </p>
     <?php else: ?>
     <p class="mt-4">
-        <form method="POST" action="/logout" style="display:inline;">
-            <?php echo csrf_field(); ?>
-            <button type="submit" class="btn btn-outline-danger">登出</button>
-        </form>
+        <a href="/logout" class="btn btn-outline-danger">登出</a>
     </p>
     <?php endif; ?>
 </div>
