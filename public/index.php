@@ -36,8 +36,8 @@ $routes = [
     // 帳號（A 負責 — 之後實作）
     // ['GET',  '/login',                  [AuthController::class,    'showLogin']],
     // ['POST', '/login',                  [AuthController::class,    'login']],
-    ['GET',  '/register',                  [AuthController::class,    'showRegister']],
-    ['POST', '/register',                  [AuthController::class,    'register']],
+    // ['GET',  '/register',               [AuthController::class,    'showRegister']],
+    // ['POST', '/register',               [AuthController::class,    'register']],
     // ['POST', '/logout',                 [AuthController::class,    'logout']],
 
     // 演唱會（B 負責）
