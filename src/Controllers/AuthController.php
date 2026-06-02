@@ -38,6 +38,9 @@ class AuthController
         // 清除註冊表單資料
         unset($_SESSION['register_errors'], $_SESSION['register_form']);
 
+        // 設定成功訊息
+        flash('success', '註冊成功！歡迎 ' . trim($_POST['name']));
+
         // 重導到首頁
         header('Location: /');
         exit;
