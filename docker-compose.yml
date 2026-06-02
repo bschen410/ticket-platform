@@ -35,5 +35,19 @@ services:
       timeout: 5s
       retries: 10
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ticket-phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: secret
+      PMA_DATABASE: ticket_platform
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   db-data:
