@@ -38,3 +38,11 @@ function render(string $template, array $data = [], ?string $layout = 'layouts/m
     }
     require $layoutPath;
 }
+
+// 找不到資源：回 404 並結束請求
+function abort_404(): void
+{
+    http_response_code(404);
+    render('errors/404', ['uri' => $_SERVER['REQUEST_URI'] ?? '']);
+    exit;
+}
