@@ -10,6 +10,7 @@ require_once __DIR__ . '/../src/helpers/auth.php';
 require_once __DIR__ . '/../src/helpers/csrf.php';
 require_once __DIR__ . '/../src/helpers/view.php';
 require_once __DIR__ . '/../src/helpers/flash.php';
+require_once __DIR__ . '/../src/helpers/form.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
@@ -30,18 +31,16 @@ function match_route(string $method, string $uri, array $routes): ?array
 }
 
 $routes = [
-    // 首頁 + 範例
-    ['GET',  '/',                          [HomeController::class,    'index']],
+    // 演唱會瀏覽（B）
+    ['GET',  '/',                           [ConcertController::class, 'index']],
+    ['GET',  '/concerts/{id}',              [ConcertController::class, 'show']],
 
-    // 帳號（A 負責 — 之後實作）
+    // 帳號（A）
     ['GET',  '/login',                      [AuthController::class,    'showLogin']],
     ['POST', '/login',                      [AuthController::class,    'login']],
-    ['GET',  '/register',                  [AuthController::class,    'showRegister']],
-    ['POST', '/register',                  [AuthController::class,    'register']],
+    ['GET',  '/register',                   [AuthController::class,    'showRegister']],
+    ['POST', '/register',                   [AuthController::class,    'register']],
     ['POST', '/logout',                     [AuthController::class,    'logout']],
-
-    // 演唱會（B 負責）
-    // ['GET',  '/concerts/{id}',          [ConcertController::class, 'show']],
 
     // 訂票（C 負責）
     // ['POST', '/orders',                 [OrderController::class,   'create']],
@@ -49,9 +48,18 @@ $routes = [
     // ['POST', '/orders/{id}/pay',        [OrderController::class,   'pay']],
     // ['GET',  '/my/orders',              [OrderController::class,   'mine']],
 
-    // 管理員後台（B 負責）
-    // ['GET',  '/admin/concerts',         [Admin\ConcertController::class, 'index']],
-    // ...
+    // 管理員後台 — 演唱會 CRUD（B）
+    ['GET',  '/admin/concerts',             [Admin\ConcertController::class, 'index']],
+    ['GET',  '/admin/concerts/new',         [Admin\ConcertController::class, 'create']],
+    ['POST', '/admin/concerts',             [Admin\ConcertController::class, 'store']],
+    ['GET',  '/admin/concerts/{id}/edit',   [Admin\ConcertController::class, 'edit']],
+    ['POST', '/admin/concerts/{id}',        [Admin\ConcertController::class, 'update']],
+    ['POST', '/admin/concerts/{id}/delete', [Admin\ConcertController::class, 'destroy']],
+
+    // 管理員後台 — 區域 CRUD（B）
+    ['POST', '/admin/concerts/{id}/zones',  [Admin\ZoneController::class, 'store']],
+    ['POST', '/admin/zones/{id}',           [Admin\ZoneController::class, 'update']],
+    ['POST', '/admin/zones/{id}/delete',    [Admin\ZoneController::class, 'destroy']],
 ];
 
 // 簡易 autoload：依 class 名稱找 src/Controllers/、src/Models/
@@ -81,4 +89,10 @@ if ($matched === null) {
 [$handler, $params] = $matched;
 [$class, $action] = $handler;
 
-(new $class())->{$action}(...array_values($params));
+// 動態段（{id}）正則只配數字，轉成 int 再傳入 controller（strict_types 需要）
+$args = array_map(
+    static fn($v) => ctype_digit((string) $v) ? (int) $v : $v,
+    array_values($params)
+);
+
+(new $class())->{$action}(...$args);
