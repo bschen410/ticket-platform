@@ -40,7 +40,7 @@
                         <td class="text-end">
                             <a href="/admin/concerts/<?= (int) $c['id'] ?>/edit" class="btn btn-sm btn-outline-secondary">編輯</a>
                             <form method="post" action="/admin/concerts/<?= (int) $c['id'] ?>/delete" class="d-inline"
-                                  onsubmit="return confirm('確定刪除「<?= e($c['title']) ?>」？此操作無法復原。');">
+                                    onsubmit="return confirm(<?= e(json_encode('確定刪除「' . $c['title'] . '」？此操作無法復原。', JSON_UNESCAPED_UNICODE)) ?>);">
                                 <?= csrf_field() ?>
                                 <button class="btn btn-sm btn-outline-danger">刪除</button>
                             </form>

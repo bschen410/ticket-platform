@@ -1,4 +1,5 @@
 <?php /** @var array $concert */ ?>
+<?php $u = current_user(); ?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -37,18 +38,36 @@
                     <th>票區</th>
                     <th class="text-end">票價</th>
                     <th class="text-end">剩餘張數</th>
+                    <th class="text-end" style="width:14rem;">訂票</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($concert['zones'] as $z): ?>
+                    <?php $remaining = (int) $z['remaining']; ?>
                     <tr>
                         <td><?= e($z['name']) ?></td>
                         <td class="text-end">NT$ <?= number_format((float) $z['price']) ?></td>
                         <td class="text-end">
-                            <?php if ((int) $z['remaining'] > 0): ?>
-                                <span class="badge bg-success"><?= (int) $z['remaining'] ?></span>
+                            <?php if ($remaining > 0): ?>
+                                <span class="badge bg-success"><?= $remaining ?></span>
                             <?php else: ?>
                                 <span class="badge bg-secondary">售完</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-end">
+                            <?php if ($remaining <= 0): ?>
+                                <span class="text-muted">—</span>
+                            <?php elseif ($u === null): ?>
+                                <a href="/login" class="btn btn-sm btn-outline-primary">登入後訂票</a>
+                            <?php else: ?>
+                                <form method="post" action="/orders" class="d-flex gap-2 justify-content-end">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="concert_id" value="<?= (int) $concert['id'] ?>">
+                                    <input type="hidden" name="zone_id" value="<?= (int) $z['id'] ?>">
+                                    <input type="number" name="qty" value="1" min="1" max="<?= $remaining ?>"
+                                           class="form-control form-control-sm" style="width:5rem;" aria-label="張數">
+                                    <button type="submit" class="btn btn-sm btn-primary">訂票</button>
+                                </form>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -56,6 +75,5 @@
             </tbody>
         </table>
     </div>
-    <?php /* Step 3（C）：在此加入訂票表單 <form method="post" action="/orders">（選 zone + 張數 + CSRF） */ ?>
-    <p class="text-muted small">訂票功能將於下一階段開放。</p>
+    <?php /* 訂票送到 POST /orders（OrderController::create，Step 3 C）：帶 concert_id + zone_id + qty + CSRF */ ?>
 <?php endif; ?>

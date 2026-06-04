@@ -55,7 +55,7 @@
                     <button class="btn btn-sm btn-outline-primary">更新</button>
                 </form>
                 <form method="post" action="/admin/zones/<?= (int) $z['id'] ?>/delete" class="mb-0"
-                      onsubmit="return confirm('確定刪除區域「<?= e($z['name']) ?>」？');">
+                        onsubmit="return confirm(<?= e(json_encode('確定刪除區域「' . $z['name'] . '」？', JSON_UNESCAPED_UNICODE)) ?>);">
                     <?= csrf_field() ?>
                     <button class="btn btn-sm btn-outline-danger">刪除</button>
                 </form>
