@@ -259,11 +259,6 @@ $hasSlides = !empty($slides);
                                 <h3 class="font-manrope font-bold text-[#a63f21] text-2xl leading-tight line-clamp-1">
                                     <?= e($c['title']) ?>
                                 </h3>
-                                <?php if (!empty($c['description'])): ?>
-                                    <p class="text-[#4b4b4b] text-sm font-inter leading-5 mt-0.5 line-clamp-1">
-                                        <?= e($c['description']) ?>
-                                    </p>
-                                <?php endif; ?>
                             </div>
 
                             <div class="flex items-center gap-0 mt-2">
