@@ -9,7 +9,7 @@ function e(?string $s): string
 
 // render('home/index', ['x' => 1])
 // 預設用 layouts/main 包外框；要不包就傳 layout=null
-function render(string $template, array $data = [], ?string $layout = 'layouts/main'): void
+function render(string $template, array $data = [], ?string $layout = 'layouts/app'): void
 {
     $viewsRoot = dirname(__DIR__) . '/Views/';
     $templatePath = $viewsRoot . $template . '.php';
