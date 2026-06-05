@@ -41,13 +41,29 @@ function user_exists(string $email): bool
     return $stmt->fetch() !== false;
 }
 
-function create_user(string $name, string $email, string $password): int
-{
+function create_user(
+    string $name,
+    string $email,
+    string $password,
+    string $verificationCodeHash,
+    string $verificationExpiresAt
+): int {
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
-    $stmt = query(
-        'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
-        [$name, $email, $password_hash]
+
+    query(
+        'INSERT INTO users 
+            (name, email, password_hash, verification_code, verification_expires_at, email_verified_at) 
+         VALUES 
+            (?, ?, ?, ?, ?, NULL)',
+        [
+            $name,
+            $email,
+            $password_hash,
+            $verificationCodeHash,
+            $verificationExpiresAt
+        ]
     );
+
     return (int)db()->lastInsertId();
 }
 
@@ -111,7 +127,7 @@ function validate_login(array $input): array
 
 function attempt_login(string $email, string $password): ?array
 {
-    $stmt = query('SELECT id, email, password_hash, name, role FROM users WHERE email = ?', [$email]);
+    $stmt = query('SELECT id, email, password_hash, name, role, email_verified_at FROM users WHERE email = ?', [$email]);
     $user = $stmt->fetch();
 
     if (!$user) {
@@ -122,10 +138,61 @@ function attempt_login(string $email, string $password): ?array
         return null;
     }
 
+    if ($user['email_verified_at'] === null) {
+        return [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'name' => $user['name'],
+            'role' => $user['role'],
+            'email_verified_at' => null,
+            'not_verified' => true,
+        ];
+    }
+
     return [
         'id' => $user['id'],
         'email' => $user['email'],
         'name' => $user['name'],
         'role' => $user['role'],
+        'email_verified_at' => $user['email_verified_at'],
     ];
+}
+
+function find_user_by_id(int $id): ?array
+{
+    $stmt = query(
+        'SELECT id, email, name, role, verification_code, verification_expires_at, email_verified_at
+         FROM users
+         WHERE id = ?',
+        [$id]
+    );
+
+    return $stmt->fetch() ?: null;
+}
+
+function mark_email_as_verified(int $id): void
+{
+    query(
+        'UPDATE users
+         SET email_verified_at = NOW(),
+             verification_code = NULL,
+             verification_expires_at = NULL
+         WHERE id = ?',
+        [$id]
+    );
+}
+
+function delete_user_by_id(int $id): void
+{
+    query('DELETE FROM users WHERE id = ?', [$id]);
+}
+
+function delete_expired_unverified_users(): void
+{
+    query(
+        'DELETE FROM users
+         WHERE email_verified_at IS NULL
+         AND verification_expires_at IS NOT NULL
+         AND verification_expires_at < NOW()'
+    );
 }

@@ -14,12 +14,15 @@ DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE users (
-    id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    email           VARCHAR(190) NOT NULL UNIQUE,
-    password_hash   VARCHAR(255) NOT NULL,
-    name            VARCHAR(80)  NOT NULL,
-    role            ENUM('customer','admin') NOT NULL DEFAULT 'customer',
-    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id                      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email                   VARCHAR(190) NOT NULL UNIQUE,
+    password_hash           VARCHAR(255) NOT NULL,
+    name                    VARCHAR(80)  NOT NULL,
+    role                    ENUM('customer','admin') NOT NULL DEFAULT 'customer',
+    email_verified_at       DATETIME NULL,
+    verification_code       VARCHAR(255) NULL,
+    verification_expires_at DATETIME NULL,
+    created_at              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE concerts (

@@ -5,12 +5,15 @@ declare(strict_types=1);
 
 session_start();
 
+// 加載 Composer 依賴
+require_once __DIR__ . '/../vendor/autoload.php';
+
 require_once __DIR__ . '/../src/helpers/db.php';
 require_once __DIR__ . '/../src/helpers/auth.php';
 require_once __DIR__ . '/../src/helpers/csrf.php';
 require_once __DIR__ . '/../src/helpers/view.php';
 require_once __DIR__ . '/../src/helpers/flash.php';
-require_once __DIR__ . '/../src/helpers/form.php';
+require_once __DIR__ . '/../src/helpers/mail.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
@@ -38,8 +41,10 @@ $routes = [
     // 帳號（A）
     ['GET',  '/login',                      [AuthController::class,    'showLogin']],
     ['POST', '/login',                      [AuthController::class,    'login']],
-    ['GET',  '/register',                   [AuthController::class,    'showRegister']],
-    ['POST', '/register',                   [AuthController::class,    'register']],
+    ['GET',  '/register',                  [AuthController::class,    'showRegister']],
+    ['POST', '/register',                  [AuthController::class,    'register']],
+    ['GET',  '/verify-email', [VerificationController::class, 'show']],
+    ['POST', '/verify-email', [VerificationController::class, 'verify']],
     ['POST', '/logout',                     [AuthController::class,    'logout']],
 
     // 訂票（C 負責）
