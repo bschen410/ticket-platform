@@ -3,6 +3,15 @@
 
 declare(strict_types=1);
 
+// 內建伺服器（php -S）搭配 router script 時不會自動服務靜態檔；
+// 對應到 public/ 下實體檔案的請求（/assets/*）直接交還給伺服器。
+if (PHP_SAPI === 'cli-server') {
+    $file = __DIR__ . '/' . ltrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '', '/');
+    if (is_file($file)) {
+        return false;
+    }
+}
+
 session_start();
 
 require_once __DIR__ . '/../src/helpers/db.php';
