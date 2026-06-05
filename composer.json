@@ -1,0 +1,13 @@
+{
+    "name": "ticket-platform/app",
+    "description": "演唱會票務平台",
+    "require": {
+        "php": "^8.0",
+        "phpmailer/phpmailer": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
