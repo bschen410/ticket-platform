@@ -53,11 +53,12 @@ SET @notice1 = '* 每人限購4張票券。
 
 -- ─────────────────────────────────────────────────────────────────
 
-INSERT INTO concerts (title, venue, performed_at, program_intro, price_info, notices, sales_start_at, sales_end_at, status) VALUES
+INSERT INTO concerts (title, venue, performed_at, poster_url, program_intro, price_info, notices, sales_start_at, sales_end_at, status) VALUES
 (
     '公館青少年 GGteens 2026 年度專場【青少年之後】最終場',
     'Zepp New Taipei',
     '2026-09-13 18:30:00',
+    'https://static.tixcraft.com/images/activity/26_ggteenstp_7b9b4eac930696e30b3582371cc2fa02.jpg',
     @prog1, @price1, @notice1,
     '2026-05-01 10:00:00', '2026-07-19 23:59:59', 'on_sale'
 ),
@@ -65,6 +66,7 @@ INSERT INTO concerts (title, venue, performed_at, program_intro, price_info, not
     '經典搖滾之夜',
     '高雄巨蛋',
     '2026-08-15 19:00:00',
+    NULL,
     '搖滾傳奇樂團 30 週年紀念巡演。', NULL, NULL,
     '2026-05-15 10:00:00', '2026-08-14 23:59:59', 'on_sale'
 ),
@@ -72,6 +74,7 @@ INSERT INTO concerts (title, venue, performed_at, program_intro, price_info, not
     '爵士不眠夜',
     '臺中國家歌劇院',
     '2026-09-05 20:00:00',
+    NULL,
     '國際爵士樂手聯演，限量 600 席。', NULL, NULL,
     '2026-06-01 10:00:00', '2026-09-04 23:59:59', 'on_sale'
 );
