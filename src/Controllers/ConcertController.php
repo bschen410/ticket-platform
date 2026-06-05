@@ -7,9 +7,9 @@ class ConcertController
     // 首頁：販售中演唱會列表
     public function index(): void
     {
-        render('concerts/index', [
+        render('home/index', [
             'concerts' => Concert::onSaleList(),
-        ]);
+        ], 'layouts/homepage');
     }
 
     // 詳細頁：演唱會資訊 + 各區票價與剩餘

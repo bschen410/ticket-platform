@@ -3,186 +3,86 @@ $errors = $_SESSION['register_errors'] ?? [];
 $form = $_SESSION['register_form'] ?? [];
 ?>
 
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>註冊</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-top: 0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #5568d3;
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 5px;
-            display: block;
-        }
-        .alert {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        input.error {
-            border-color: #e74c3c;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>建立帳號</h1>
-        
+<div class="mx-auto flex min-h-[70vh] max-w-md items-center">
+    <div class="w-full rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
+        <h1 class="text-center text-2xl font-bold text-slate-900">建立帳號</h1>
+
         <?php if (!empty($errors)): ?>
-        <div class="alert">
-            <strong>註冊失敗，請檢查以下問題：</strong>
-        </div>
+            <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                <strong>註冊失敗，請檢查以下問題：</strong>
+            </div>
         <?php endif; ?>
-        
-        <form method="POST" action="/register">
-            <?php echo csrf_field(); ?>
-            
-            <div class="form-group">
-                <label for="name">名字</label>
-                <input 
-                    type="text" 
-                    id="name" 
-                    name="name" 
-                    placeholder="請輸入你的名字" 
-                    value="<?php echo htmlspecialchars($form['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                    class="<?php echo isset($errors['name']) ? 'error' : ''; ?>"
+
+        <form method="POST" action="/register" class="mt-6 space-y-4">
+            <?= csrf_field(); ?>
+
+            <div>
+                <label for="name" class="mb-1 block text-sm font-medium text-slate-700">名字</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="請輸入你的名字"
+                    value="<?= e($form['name'] ?? '') ?>"
+                    class="w-full rounded-lg border px-3 py-2 text-sm outline-none transition focus:ring-2 <?= isset($errors['name']) ? 'border-red-300 focus:ring-red-200' : 'border-slate-300 focus:border-slate-500 focus:ring-slate-200' ?>"
                     required
                 >
                 <?php if (isset($errors['name'])): ?>
-                <span class="error-message"><?php echo $errors['name']; ?></span>
+                    <span class="mt-1 block text-sm text-red-600"><?= e($errors['name']) ?></span>
                 <?php endif; ?>
             </div>
-            
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
+
+            <div>
+                <label for="email" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
                     placeholder="你的 Email"
-                    value="<?php echo htmlspecialchars($form['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                    class="<?php echo isset($errors['email']) ? 'error' : ''; ?>"
+                    value="<?= e($form['email'] ?? '') ?>"
+                    class="w-full rounded-lg border px-3 py-2 text-sm outline-none transition focus:ring-2 <?= isset($errors['email']) ? 'border-red-300 focus:ring-red-200' : 'border-slate-300 focus:border-slate-500 focus:ring-slate-200' ?>"
                     required
                 >
                 <?php if (isset($errors['email'])): ?>
-                <span class="error-message"><?php echo $errors['email']; ?></span>
+                    <span class="mt-1 block text-sm text-red-600"><?= e($errors['email']) ?></span>
                 <?php endif; ?>
             </div>
-            
-            <div class="form-group">
-                <label for="password">密碼</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
+
+            <div>
+                <label for="password" class="mb-1 block text-sm font-medium text-slate-700">密碼</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
                     placeholder="至少 6 個字元"
-                    class="<?php echo isset($errors['password']) ? 'error' : ''; ?>"
+                    class="w-full rounded-lg border px-3 py-2 text-sm outline-none transition focus:ring-2 <?= isset($errors['password']) ? 'border-red-300 focus:ring-red-200' : 'border-slate-300 focus:border-slate-500 focus:ring-slate-200' ?>"
                     required
                 >
                 <?php if (isset($errors['password'])): ?>
-                <span class="error-message"><?php echo $errors['password']; ?></span>
+                    <span class="mt-1 block text-sm text-red-600"><?= e($errors['password']) ?></span>
                 <?php endif; ?>
             </div>
-            
-            <div class="form-group">
-                <label for="password_confirm">確認密碼</label>
-                <input 
-                    type="password" 
-                    id="password_confirm" 
-                    name="password_confirm" 
+
+            <div>
+                <label for="password_confirm" class="mb-1 block text-sm font-medium text-slate-700">確認密碼</label>
+                <input
+                    type="password"
+                    id="password_confirm"
+                    name="password_confirm"
                     placeholder="再輸入一次密碼"
-                    class="<?php echo isset($errors['password_confirm']) ? 'error' : ''; ?>"
+                    class="w-full rounded-lg border px-3 py-2 text-sm outline-none transition focus:ring-2 <?= isset($errors['password_confirm']) ? 'border-red-300 focus:ring-red-200' : 'border-slate-300 focus:border-slate-500 focus:ring-slate-200' ?>"
                     required
                 >
                 <?php if (isset($errors['password_confirm'])): ?>
-                <span class="error-message"><?php echo $errors['password_confirm']; ?></span>
+                    <span class="mt-1 block text-sm text-red-600"><?= e($errors['password_confirm']) ?></span>
                 <?php endif; ?>
             </div>
-            
-            <button type="submit">建立帳號</button>
+
+            <button type="submit" class="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700">建立帳號</button>
         </form>
-        
-        <div class="login-link">
-            已有帳號？<a href="/login">立即登入</a>
+
+        <div class="mt-6 text-center text-sm text-slate-600">
+            已有帳號？<a href="/login" class="font-semibold text-slate-900 hover:underline">立即登入</a>
         </div>
     </div>
-</body>
-</html>
+</div>
