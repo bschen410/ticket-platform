@@ -35,6 +35,9 @@ function db(): PDO
         PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
 
+    // 容器預設 UTC；統一連線時區為台北，讓 NOW() / expires_at 用本地時間。
+    $pdo->exec("SET time_zone = '+08:00'");
+
     return $pdo;
 }
 

@@ -3,6 +3,18 @@
 
 declare(strict_types=1);
 
+// 容器預設 UTC；統一以台北時間顯示/計算（需與 db.php 的連線時區一致）。
+date_default_timezone_set('Asia/Taipei');
+
+// 內建伺服器（php -S）搭配 router script 時不會自動服務靜態檔；
+// 對應到 public/ 下實體檔案的請求（/assets/*）直接交還給伺服器。
+if (PHP_SAPI === 'cli-server') {
+    $file = __DIR__ . '/' . ltrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '', '/');
+    if (is_file($file)) {
+        return false;
+    }
+}
+
 session_start();
 
 // 加載 Composer 依賴
@@ -48,10 +60,10 @@ $routes = [
     ['POST', '/logout',                     [AuthController::class,    'logout']],
 
     // 訂票（C 負責）
-    // ['POST', '/orders',                 [OrderController::class,   'create']],
-    // ['GET',  '/orders/{id}',            [OrderController::class,   'show']],
-    // ['POST', '/orders/{id}/pay',        [OrderController::class,   'pay']],
-    // ['GET',  '/my/orders',              [OrderController::class,   'mine']],
+    ['POST', '/orders',                     [OrderController::class,   'create']],
+    ['GET',  '/orders/{id}',                [OrderController::class,   'show']],
+    ['POST', '/orders/{id}/pay',            [OrderController::class,   'pay']],
+    ['GET',  '/my/orders',                  [OrderController::class,   'mine']],
 
     // 管理員後台 — 演唱會 CRUD（B）
     ['GET',  '/admin/concerts',             [Admin\ConcertController::class, 'index']],
