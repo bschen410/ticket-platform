@@ -26,6 +26,7 @@ require_once __DIR__ . '/../src/helpers/csrf.php';
 require_once __DIR__ . '/../src/helpers/view.php';
 require_once __DIR__ . '/../src/helpers/flash.php';
 require_once __DIR__ . '/../src/helpers/mail.php';
+require_once __DIR__ . '/../src/helpers/form.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
