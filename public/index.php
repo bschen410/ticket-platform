@@ -51,19 +51,19 @@ $routes = [
     ['GET',  '/concerts/{id}',              [ConcertController::class, 'show']],
 
     // 帳號（A）
-    ['GET',  '/login',                      [AuthController::class,    'showLogin']],
-    ['POST', '/login',                      [AuthController::class,    'login']],
-    ['GET',  '/register',                  [AuthController::class,    'showRegister']],
-    ['POST', '/register',                  [AuthController::class,    'register']],
-    ['GET',  '/verify-email', [VerificationController::class, 'show']],
-    ['POST', '/verify-email', [VerificationController::class, 'verify']],
-    ['POST', '/logout',                     [AuthController::class,    'logout']],
+    ['GET',  '/login',                      [AuthController::class, 'showLogin']],
+    ['POST', '/login',                      [AuthController::class, 'login']],
+    ['GET',  '/register',                   [AuthController::class, 'showRegister']],
+    ['POST', '/register',                   [AuthController::class, 'register']],
+    ['GET',  '/verify-email',               [VerificationController::class, 'show']],
+    ['POST', '/verify-email',               [VerificationController::class, 'verify']],
+    ['POST', '/logout',                     [AuthController::class, 'logout']],
 
     // 訂票（C 負責）
-    ['POST', '/orders',                     [OrderController::class,   'create']],
-    ['GET',  '/orders/{id}',                [OrderController::class,   'show']],
-    ['POST', '/orders/{id}/pay',            [OrderController::class,   'pay']],
-    ['GET',  '/my/orders',                  [OrderController::class,   'mine']],
+    ['POST', '/orders',                     [OrderController::class, 'create']],
+    ['GET',  '/orders/{id}',                [OrderController::class, 'show']],
+    ['POST', '/orders/{id}/pay',            [OrderController::class, 'pay']],
+    ['GET',  '/my/orders',                  [OrderController::class, 'mine']],
 
     // 管理員後台 — 演唱會 CRUD（B）
     ['GET',  '/admin/concerts',             [Admin\ConcertController::class, 'index']],
