@@ -48,4 +48,35 @@ class Zone
     {
         return query('DELETE FROM zones WHERE id = ?', [$id])->rowCount() > 0;
     }
+
+    // 訂票 transaction 內鎖列：必須在 db()->beginTransaction() 之後呼叫，否則 FOR UPDATE 無效。
+    public static function findForUpdate(int $zoneId, int $concertId): ?array
+    {
+        $row = query(
+            'SELECT id, name, price, total_seats, sold_seats
+               FROM zones
+              WHERE id = ? AND concert_id = ?
+              FOR UPDATE',
+            [$zoneId, $concertId]
+        )->fetch();
+        return $row ?: null;
+    }
+
+    // 售出 qty 張（佔位），回傳是否有更新到列。
+    public static function incrementSold(int $zoneId, int $qty): bool
+    {
+        return query(
+            'UPDATE zones SET sold_seats = sold_seats + ? WHERE id = ?',
+            [$qty, $zoneId]
+        )->rowCount() > 0;
+    }
+
+    // 回庫 qty 張（過期單回收），GREATEST 保險避免扣成負數。
+    public static function decrementSold(int $zoneId, int $qty): bool
+    {
+        return query(
+            'UPDATE zones SET sold_seats = GREATEST(sold_seats - ?, 0) WHERE id = ?',
+            [$qty, $zoneId]
+        )->rowCount() > 0;
+    }
 }

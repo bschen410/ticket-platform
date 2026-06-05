@@ -43,10 +43,10 @@ $routes = [
     ['POST', '/logout',                     [AuthController::class,    'logout']],
 
     // 訂票（C 負責）
-    // ['POST', '/orders',                 [OrderController::class,   'create']],
-    // ['GET',  '/orders/{id}',            [OrderController::class,   'show']],
-    // ['POST', '/orders/{id}/pay',        [OrderController::class,   'pay']],
-    // ['GET',  '/my/orders',              [OrderController::class,   'mine']],
+    ['POST', '/orders',                     [OrderController::class,   'create']],
+    ['GET',  '/orders/{id}',                [OrderController::class,   'show']],
+    ['POST', '/orders/{id}/pay',            [OrderController::class,   'pay']],
+    ['GET',  '/my/orders',                  [OrderController::class,   'mine']],
 
     // 管理員後台 — 演唱會 CRUD（B）
     ['GET',  '/admin/concerts',             [Admin\ConcertController::class, 'index']],
