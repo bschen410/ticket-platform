@@ -9,7 +9,7 @@ class Concert
     public static function onSaleList(): array
     {
         return query(
-            "SELECT id, title, venue, performed_at, poster_url, description
+            "SELECT id, title, venue, performed_at, poster_url, program_intro, price_info, notices
                FROM concerts
               WHERE status = 'on_sale'
               ORDER BY performed_at ASC"
@@ -49,15 +49,17 @@ class Concert
     {
         query(
             'INSERT INTO concerts
-                (title, venue, performed_at, poster_url, description,
+                (title, venue, performed_at, poster_url, program_intro, price_info, notices,
                  sales_start_at, sales_end_at, status)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $data['title'],
                 $data['venue'],
                 $data['performed_at'],
                 $data['poster_url'] !== '' ? $data['poster_url'] : null,
-                $data['description'] !== '' ? $data['description'] : null,
+                $data['program_intro'] !== '' ? $data['program_intro'] : null,
+                $data['price_info'] !== '' ? $data['price_info'] : null,
+                $data['notices'] !== '' ? $data['notices'] : null,
                 $data['sales_start_at'],
                 $data['sales_end_at'],
                 $data['status'],
@@ -71,14 +73,17 @@ class Concert
         query(
             'UPDATE concerts
                 SET title = ?, venue = ?, performed_at = ?, poster_url = ?,
-                    description = ?, sales_start_at = ?, sales_end_at = ?, status = ?
+                    program_intro = ?, price_info = ?, notices = ?,
+                    sales_start_at = ?, sales_end_at = ?, status = ?
               WHERE id = ?',
             [
                 $data['title'],
                 $data['venue'],
                 $data['performed_at'],
                 $data['poster_url'] !== '' ? $data['poster_url'] : null,
-                $data['description'] !== '' ? $data['description'] : null,
+                $data['program_intro'] !== '' ? $data['program_intro'] : null,
+                $data['price_info'] !== '' ? $data['price_info'] : null,
+                $data['notices'] !== '' ? $data['notices'] : null,
                 $data['sales_start_at'],
                 $data['sales_end_at'],
                 $data['status'],
