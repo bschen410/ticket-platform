@@ -43,7 +43,7 @@
 
 - PHP 8.x（原生，無框架）
 - MySQL 8.x（InnoDB，使用 transaction + row lock 處理搶票）
-- Bootstrap 5（CDN）
+- Tailwind CSS（CDN）
 
 ---
 

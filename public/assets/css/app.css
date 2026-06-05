@@ -1,1 +1,6 @@
-/* 自訂樣式之後加在這裡 */
+/* 自訂樣式：navbar 相關覆寫與小樣式 */
+.navbar-brand {
+    letter-spacing: 0.08em;
+}
+
+/* Tailwind 目前直接由 CDN 載入，這裡只保留少量自訂樣式。 */
