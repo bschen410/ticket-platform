@@ -63,8 +63,18 @@ $statusLabels = ['draft' => '草稿', 'on_sale' => '販售中', 'closed' => '已
     </div>
 
     <div>
-        <label class="mb-1 block text-sm font-medium text-slate-700">簡介</label>
-        <textarea name="description" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none" rows="3"><?= e($val('description')) ?></textarea>
+        <label class="mb-1 block text-sm font-medium text-slate-700">節目介紹</label>
+        <textarea name="program_intro" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none" rows="3"><?= e($val('program_intro')) ?></textarea>
+    </div>
+
+    <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700">票價資訊</label>
+        <textarea name="price_info" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none" rows="3"><?= e($val('price_info')) ?></textarea>
+    </div>
+
+    <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700">注意事項</label>
+        <textarea name="notices" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none" rows="3"><?= e($val('notices')) ?></textarea>
     </div>
 
     <div>
