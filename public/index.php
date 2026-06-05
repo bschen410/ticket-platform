@@ -3,6 +3,9 @@
 
 declare(strict_types=1);
 
+// 容器預設 UTC；統一以台北時間顯示/計算（需與 db.php 的連線時區一致）。
+date_default_timezone_set('Asia/Taipei');
+
 // 內建伺服器（php -S）搭配 router script 時不會自動服務靜態檔；
 // 對應到 public/ 下實體檔案的請求（/assets/*）直接交還給伺服器。
 if (PHP_SAPI === 'cli-server') {
