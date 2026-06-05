@@ -15,8 +15,8 @@ class OrderController
         $zoneId    = (int) ($_POST['zone_id'] ?? 0);
         $qty       = (int) ($_POST['qty'] ?? 0);
 
-        if ($concertId <= 0 || $zoneId <= 0 || $qty < 1) {
-            flash('error', '訂票資料不正確');
+        if ($concertId <= 0 || $zoneId <= 0 || $qty < 1 || $qty > 10) {
+            flash('error', '訂票資料不正確（每次最多 10 張）');
             header('Location: /concerts/' . max($concertId, 0));
             return;
         }
@@ -24,7 +24,10 @@ class OrderController
         $pdo = db();
         $pdo->beginTransaction();
         try {
-            // 1. 鎖住票區列
+            // 1. 以固定 id 升序鎖住全場所有票區，確保並行 transaction 鎖序一致，消除 deadlock 風險。
+            Zone::lockByConcert($concertId);
+
+            // 2. 驗證目標票區存在（鎖已由上一步取得，此處 FOR UPDATE 為複查）
             $zone = Zone::findForUpdate($zoneId, $concertId);
             if ($zone === null) {
                 $pdo->rollBack();
@@ -33,10 +36,10 @@ class OrderController
                 return;
             }
 
-            // 2. lazy expiration：把同場過期 pending 單回庫（沿用既有 transaction）
+            // 3. lazy expiration：把同場過期 pending 單回庫（全場 zone 已鎖，可安全回扣庫存）
             self::expireAndRestock($concertId);
 
-            // 3. 回庫後重新讀剩餘
+            // 4. 回庫後重新讀剩餘
             $zone      = Zone::findForUpdate($zoneId, $concertId);
             $sold      = (int) $zone['sold_seats'];
             $remaining = (int) $zone['total_seats'] - $sold;
@@ -47,13 +50,13 @@ class OrderController
                 return;
             }
 
-            // 4. 分配座位（第一版流水號；基準為回庫後、增量前的 sold）
+            // 5. 分配座位（第一版流水號；基準為回庫後、增量前的 sold）
             $seatLabels = [];
             for ($i = 1; $i <= $qty; $i++) {
                 $seatLabels[] = $zone['name'] . ' 第' . ($sold + $i) . '張';
             }
 
-            // 5. 扣庫存 → 建訂單 → 建項目
+            // 6. 扣庫存 → 建訂單 → 建項目
             $unitPrice = (float) $zone['price'];
             Zone::incrementSold($zoneId, $qty);
             $orderId = Order::create((int) $user['id'], $concertId, $unitPrice * $qty);
@@ -144,6 +147,7 @@ class OrderController
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
+            error_log('expireConcert failed for concert ' . $concertId . ': ' . $e->getMessage());
         }
     }
 

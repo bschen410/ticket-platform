@@ -49,6 +49,15 @@ class Zone
         return query('DELETE FROM zones WHERE id = ?', [$id])->rowCount() > 0;
     }
 
+    // 訂票 transaction 開頭鎖住全場所有票區（ORDER BY id 固定順序），消除並行 transaction 的 deadlock 風險。
+    public static function lockByConcert(int $concertId): void
+    {
+        query(
+            'SELECT id FROM zones WHERE concert_id = ? ORDER BY id FOR UPDATE',
+            [$concertId]
+        )->fetchAll();
+    }
+
     // 訂票 transaction 內鎖列：必須在 db()->beginTransaction() 之後呼叫，否則 FOR UPDATE 無效。
     public static function findForUpdate(int $zoneId, int $concertId): ?array
     {
