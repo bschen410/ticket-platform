@@ -9,8 +9,7 @@ services:
       - "8000:8000"
     volumes:
       - ./:/var/www/html:Z
-    env_file:
-      - .env
+      - vendor-data:/var/www/html/vendor # 遮蔽 bind mount，保留 image 內 build 好的 vendor
     environment:
       DB_HOST: db
       DB_PORT: "3306"
@@ -27,13 +26,14 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: ticket_platform
     ports:
-      - "3307:3306"  # host 用 3307 避免跟本機 MySQL 衝突；container 內仍是 3306
+      - "3307:3306" # host 用 3307 避免跟本機 MySQL 衝突；container 內仍是 3306
     volumes:
       - db-data:/var/lib/mysql
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro,Z
       - ./sql/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro,Z
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psecret"]
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psecret"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -54,3 +54,4 @@ services:
 
 volumes:
   db-data:
+  vendor-data:

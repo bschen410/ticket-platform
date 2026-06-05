@@ -1,6 +1,5 @@
 .env
 vendor/
-composer.lock
 
 # Docker
 .docker-data/

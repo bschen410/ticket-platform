@@ -18,6 +18,7 @@ sudo usermod -aG docker $USER
 ```
 
 驗證：
+
 ```bash
 docker run --rm hello-world
 ```
@@ -39,8 +40,18 @@ docker compose up -d
 ```
 
 第一次會下載 `mysql:8.0`、`php:8.2-cli` 並 build 自家 image，大約 1–3 分鐘。
+PHP 套件（`composer install`）是在 **build image 時就裝好**並存進 `vendor-data` volume，所以啟動就能直接跑，不需要另外手動安裝，第一次啟動也不會卡在裝套件。
+這份 Docker 啟動流程也不再依賴本機 `.env`，所以直接 `up -d` 就能起；如果你要自訂郵件設定，再自己複製 `.env.example` 成 `.env` 即可。
+
+> 改了 `composer.json` / `composer.lock` 後，要重新 build image 並清掉舊的依賴 volume 才會生效：
+> ```bash
+> docker compose down -v   # 清掉 vendor-data（連 db 資料也會清，介意的話只刪 vendor-data volume）
+> docker compose build
+> docker compose up -d
+> ```
 
 確認狀態：
+
 ```bash
 docker compose ps
 ```
@@ -56,6 +67,7 @@ docker compose exec app php sql/init_admin.php
 ```
 
 成功會印：
+
 ```
 已建立 admin 帳號：
   Email: admin@example.com
@@ -74,15 +86,15 @@ docker compose exec app php sql/init_admin.php
 
 ## 日常指令
 
-| 指令 | 用途 |
-|---|---|
-| `docker compose up -d` | 啟動（背景） |
-| `docker compose logs -f app` | 看 PHP 的 stdout / error |
-| `docker compose exec app sh` | 進 app 容器內操作 |
-| `docker compose exec db mysql -uroot -psecret ticket_platform` | 進 MySQL CLI |
-| `docker compose restart app` | 改了 PHP 設定後重啟 app |
-| `docker compose down` | 停止並移除容器（保留資料） |
-| `docker compose down -v` | 連同資料庫 volume 一起清掉（重置） |
+| 指令                                                           | 用途                               |
+| -------------------------------------------------------------- | ---------------------------------- |
+| `docker compose up -d`                                         | 啟動（背景）                       |
+| `docker compose logs -f app`                                   | 看 PHP 的 stdout / error           |
+| `docker compose exec app sh`                                   | 進 app 容器內操作                  |
+| `docker compose exec db mysql -uroot -psecret ticket_platform` | 進 MySQL CLI                       |
+| `docker compose restart app`                                   | 改了 PHP 設定後重啟 app            |
+| `docker compose down`                                          | 停止並移除容器（保留資料）         |
+| `docker compose down -v`                                       | 連同資料庫 volume 一起清掉（重置） |
 
 ---
 
@@ -91,6 +103,7 @@ docker compose exec app php sql/init_admin.php
 MySQL container 只有**第一次啟動**時才會跑 `/docker-entrypoint-initdb.d/*.sql`。之後要重匯：
 
 **選項 1：整個重置**（資料全清）
+
 ```bash
 docker compose down -v
 docker compose up -d
@@ -98,6 +111,7 @@ docker compose exec app php sql/init_admin.php
 ```
 
 **選項 2：只重匯 SQL**
+
 ```bash
 docker compose exec -T db mysql -uroot -psecret ticket_platform < sql/schema.sql
 docker compose exec -T db mysql -uroot -psecret ticket_platform < sql/seed.sql
@@ -111,19 +125,21 @@ docker compose exec app php sql/init_admin.php
 兩個選項：
 
 **選項 1**：在 `docker-compose.yml` 加 phpMyAdmin 服務：
+
 ```yaml
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: ticket-pma
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: secret
-    ports:
-      - "8081:80"
-    depends_on:
-      - db
+phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  container_name: ticket-pma
+  environment:
+    PMA_HOST: db
+    PMA_USER: root
+    PMA_PASSWORD: secret
+  ports:
+    - "8081:80"
+  depends_on:
+    - db
 ```
+
 之後 `docker compose up -d`，開 `http://localhost:8081/`。
 
 **選項 2**：用本機的 MySQL Workbench / DBeaver / TablePlus 連 `127.0.0.1:3307`、root / secret。
@@ -142,13 +158,13 @@ sudo dnf install -y podman podman-compose
 
 ### 指令對照
 
-| Docker | Podman |
-|---|---|
-| `docker compose up -d` | `podman compose up -d`（或 `podman-compose up -d`） |
-| `docker compose exec app php sql/init_admin.php` | `podman compose exec app php sql/init_admin.php` |
-| `docker compose logs -f app` | `podman compose logs -f app` |
-| `docker compose down` | `podman compose down` |
-| `docker compose down -v` | `podman compose down -v` |
+| Docker                                           | Podman                                              |
+| ------------------------------------------------ | --------------------------------------------------- |
+| `docker compose up -d`                           | `podman compose up -d`（或 `podman-compose up -d`） |
+| `docker compose exec app php sql/init_admin.php` | `podman compose exec app php sql/init_admin.php`    |
+| `docker compose logs -f app`                     | `podman compose logs -f app`                        |
+| `docker compose down`                            | `podman compose down`                               |
+| `docker compose down -v`                         | `podman compose down -v`                            |
 
 ### 為什麼 volume 要加 `:Z`
 
@@ -158,13 +174,13 @@ Fedora 預設啟用 SELinux，bind mount 進容器的目錄如果沒重貼標籤
 
 ## 常見問題
 
-| 症狀 | 原因 / 解法 |
-|---|---|
-| `docker: command not found`（Fedora） | 沒裝或沒加 PATH，回步驟 1 |
-| `permission denied`（Fedora） | 還沒加入 `docker` group 或沒重新登入 |
-| port 8000 已被佔 | 改 `docker-compose.yml` 的 `8000:8000` 成 `8001:8000` |
-| port 3307 已被佔 | 改 `docker-compose.yml` 的 `3307:3306` 成別的 port |
-| `connection refused` 連 DB | `db` 還沒 ready，等 5 秒再 reload，或看 `docker compose logs db` |
-| 改了 `sql/schema.sql` 沒生效 | MySQL 只在第一次匯入；用上面「重新匯入」步驟 |
-| Windows 上跑超慢 | Docker Desktop 預設 WSL2，把專案放在 WSL 的檔案系統（`\\wsl$\...`）會比放在 `C:\` 快很多 |
-| Podman: `Permission denied` 讀檔 | `:Z` 沒生效或 SELinux 太嚴；確認 `docker-compose.yml` 的 volume 都帶 `:Z`，或暫時 `sudo setenforce 0` 排除 SELinux 嫌疑 |
+| 症狀                                  | 原因 / 解法                                                                                                             |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `docker: command not found`（Fedora） | 沒裝或沒加 PATH，回步驟 1                                                                                               |
+| `permission denied`（Fedora）         | 還沒加入 `docker` group 或沒重新登入                                                                                    |
+| port 8000 已被佔                      | 改 `docker-compose.yml` 的 `8000:8000` 成 `8001:8000`                                                                   |
+| port 3307 已被佔                      | 改 `docker-compose.yml` 的 `3307:3306` 成別的 port                                                                      |
+| `connection refused` 連 DB            | `db` 還沒 ready，等 5 秒再 reload，或看 `docker compose logs db`                                                        |
+| 改了 `sql/schema.sql` 沒生效          | MySQL 只在第一次匯入；用上面「重新匯入」步驟                                                                            |
+| Windows 上跑超慢                      | Docker Desktop 預設 WSL2，把專案放在 WSL 的檔案系統（`\\wsl$\...`）會比放在 `C:\` 快很多                                |
+| Podman: `Permission denied` 讀檔      | `:Z` 沒生效或 SELinux 太嚴；確認 `docker-compose.yml` 的 volume 都帶 `:Z`，或暫時 `sudo setenforce 0` 排除 SELinux 嫌疑 |
