@@ -3,9 +3,6 @@
 
 declare(strict_types=1);
 
-// 容器預設 UTC；統一以台北時間顯示/計算（需與 db.php 的連線時區一致）。
-date_default_timezone_set('Asia/Taipei');
-
 // 內建伺服器（php -S）搭配 router script 時不會自動服務靜態檔；
 // 對應到 public/ 下實體檔案的請求（/assets/*）直接交還給伺服器。
 if (PHP_SAPI === 'cli-server') {
@@ -15,17 +12,21 @@ if (PHP_SAPI === 'cli-server') {
     }
 }
 
+// 先載入 env，再依設定值設定時區（需與 db.php 的連線時區一致）。
+require_once __DIR__ . '/../src/helpers/db.php';
+load_env();
+date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'Asia/Taipei');
+
 session_start();
 
 // 加載 Composer 依賴
 require_once __DIR__ . '/../vendor/autoload.php';
-
-require_once __DIR__ . '/../src/helpers/db.php';
 require_once __DIR__ . '/../src/helpers/auth.php';
 require_once __DIR__ . '/../src/helpers/csrf.php';
 require_once __DIR__ . '/../src/helpers/view.php';
 require_once __DIR__ . '/../src/helpers/flash.php';
 require_once __DIR__ . '/../src/helpers/mail.php';
+require_once __DIR__ . '/../src/helpers/form.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
