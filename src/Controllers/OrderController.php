@@ -33,12 +33,8 @@ class OrderController
                 return;
             }
 
-            // 2. lazy expiration：把同場過期 pending 單回庫
-            foreach (Order::expirePending($concertId) as $expiredId) {
-                foreach (OrderItem::findByOrder($expiredId) as $item) {
-                    Zone::decrementSold((int) $item['zone_id'], (int) $item['quantity']);
-                }
-            }
+            // 2. lazy expiration：把同場過期 pending 單回庫（沿用既有 transaction）
+            self::expireAndRestock($concertId);
 
             // 3. 回庫後重新讀剩餘
             $zone      = Zone::findForUpdate($zoneId, $concertId);
@@ -84,6 +80,12 @@ class OrderController
             abort_404();
         }
 
+        // 開啟逾時的待付款單時，順手清理該場過期單並回庫，再重讀以反映 expired 狀態。
+        if ($order['status'] === 'pending' && (int) $order['seconds_left'] <= 0) {
+            self::expireConcert((int) $order['concert_id']);
+            $order = Order::findWithDetails($id);
+        }
+
         render('orders/show', ['order' => $order]);
     }
 
@@ -112,10 +114,46 @@ class OrderController
         require_login();
 
         $uid = (int) current_user()['id'];
+
+        // 進頁前先清理本人有逾時待付款的場次，重新列表才會把逾時單歸到「已過期」並回庫。
+        $concertIds = query(
+            "SELECT DISTINCT concert_id FROM orders
+              WHERE user_id = ? AND status = 'pending' AND expires_at < NOW()",
+            [$uid]
+        )->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($concertIds as $concertId) {
+            self::expireConcert((int) $concertId);
+        }
+
         render('orders/mine', [
             'pending' => Order::findMineByStatus($uid, 'pending'),
             'paid'    => Order::findMineByStatus($uid, 'paid'),
             'expired' => Order::findMineByStatus($uid, 'expired'),
         ]);
+    }
+
+    // 某場過期 pending 單標記 expired 並回庫，自帶 transaction（供檢視類動作呼叫）。
+    private static function expireConcert(int $concertId): void
+    {
+        $pdo = db();
+        $pdo->beginTransaction();
+        try {
+            self::expireAndRestock($concertId);
+            $pdo->commit();
+        } catch (\Throwable $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+        }
+    }
+
+    // 過期 pending 單標記 expired，並把佔用的庫存回扣。呼叫端須已開啟 transaction。
+    private static function expireAndRestock(int $concertId): void
+    {
+        foreach (Order::expirePending($concertId) as $expiredId) {
+            foreach (OrderItem::findByOrder($expiredId) as $item) {
+                Zone::decrementSold((int) $item['zone_id'], (int) $item['quantity']);
+            }
+        }
     }
 }

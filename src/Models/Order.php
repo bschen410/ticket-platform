@@ -66,11 +66,13 @@ class Order
     }
 
     // lazy expiration：把某場已過期的 pending 單標記為 expired，回傳這些 order id（庫存回扣由呼叫端處理）。
+    // SELECT ... FOR UPDATE 鎖住這些 pending 列：必須在 transaction 內呼叫，避免並行清理重複回庫。
     public static function expirePending(int $concertId): array
     {
         $ids = query(
             "SELECT id FROM orders
-              WHERE concert_id = ? AND status = 'pending' AND expires_at < NOW()",
+              WHERE concert_id = ? AND status = 'pending' AND expires_at < NOW()
+              FOR UPDATE",
             [$concertId]
         )->fetchAll(PDO::FETCH_COLUMN);
 
