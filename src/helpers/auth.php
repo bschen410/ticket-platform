@@ -29,8 +29,8 @@ function require_admin(): void
 {
     require_login();
     if ((current_user()['role'] ?? null) !== 'admin') {
-        http_response_code(403);
-        echo '禁止存取（需管理員權限）';
+        flash('error', '無權限存取');
+        header('Location: /');
         exit;
     }
 }
