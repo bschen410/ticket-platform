@@ -49,14 +49,15 @@ class Concert
     {
         query(
             'INSERT INTO concerts
-                (title, venue, performed_at, poster_url, program_intro, price_info, notices,
+                (title, venue, performed_at, poster_url, venue_map_url, program_intro, price_info, notices,
                  sales_start_at, sales_end_at, status)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $data['title'],
                 $data['venue'],
                 $data['performed_at'],
                 $data['poster_url'] !== '' ? $data['poster_url'] : null,
+                $data['venue_map_url'] !== '' ? $data['venue_map_url'] : null,
                 $data['program_intro'] !== '' ? $data['program_intro'] : null,
                 $data['price_info'] !== '' ? $data['price_info'] : null,
                 $data['notices'] !== '' ? $data['notices'] : null,
@@ -72,7 +73,7 @@ class Concert
     {
         query(
             'UPDATE concerts
-                SET title = ?, venue = ?, performed_at = ?, poster_url = ?,
+                SET title = ?, venue = ?, performed_at = ?, poster_url = ?, venue_map_url = ?,
                     program_intro = ?, price_info = ?, notices = ?,
                     sales_start_at = ?, sales_end_at = ?, status = ?
               WHERE id = ?',
@@ -81,6 +82,7 @@ class Concert
                 $data['venue'],
                 $data['performed_at'],
                 $data['poster_url'] !== '' ? $data['poster_url'] : null,
+                $data['venue_map_url'] !== '' ? $data['venue_map_url'] : null,
                 $data['program_intro'] !== '' ? $data['program_intro'] : null,
                 $data['price_info'] !== '' ? $data['price_info'] : null,
                 $data['notices'] !== '' ? $data['notices'] : null,

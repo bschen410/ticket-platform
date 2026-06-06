@@ -27,12 +27,12 @@ $bodyBg = ($navTransparent ?? false) ? 'bg-[#1c1c1c]' : 'bg-[#E3E3E3]';
     </script>
     <link href="/assets/css/app.css" rel="stylesheet">
 </head>
-<body class="<?= $bodyBg ?> font-inter">
+<body class="<?= $bodyBg ?> font-inter min-h-screen flex flex-col">
 
 <?php require __DIR__ . '/_header.php'; ?>
 <?php require __DIR__ . '/_flash.php'; ?>
 
-<main <?= ($navTransparent ?? false) ? '' : 'class="pt-[88px] pb-16 px-8 max-w-[1440px] mx-auto"' ?>><?= $content ?></main>
+<main <?= ($navTransparent ?? false) ? 'class="flex-1"' : 'class="flex-1 pt-[88px] pb-16 px-8 max-w-[1440px] mx-auto"' ?>><?= $content ?></main>
 
 <?php require __DIR__ . '/_footer.php'; ?>
 

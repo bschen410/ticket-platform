@@ -31,6 +31,7 @@ CREATE TABLE concerts (
     venue           VARCHAR(120) NOT NULL,
     performed_at    DATETIME NOT NULL,
     poster_url      VARCHAR(255) NULL,
+    venue_map_url   VARCHAR(255) NULL,
     program_intro   TEXT NULL,
     price_info      TEXT NULL,
     notices         TEXT NULL,
