@@ -137,7 +137,7 @@ $initialStep = $isPaid ? 3 : 1;
 <div id="step-panel-2" class="hidden bg-[#F5F5F5] rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
 
     <!-- Amount reminder -->
-    <div class="px-6 py-4 border-b border-[#E0E0E0] flex items-center justify-between">
+    <div class="px-6 py-4 border-b border-[#E0E0E0] flex items-center justify-between gap-10">
         <span class="text-sm text-gray-500"><?= e($order['concert_title']) ?></span>
         <span class="text-xl font-bold font-manrope text-gray-900">NT$ <?= number_format((float) $order['total_amount']) ?></span>
     </div>
