@@ -17,12 +17,12 @@
 
 <div class="mt-6 flex items-center gap-8">
     <div class="flex-1">
-        <h1 class="font-manrope text-[28px] font-bold leading-normal text-[#4b4b4b]"><?= e($concert['title']) ?></h1>
+        <h1 class="font-manrope text-[28px] font-bold leading-tight text-[#4b4b4b]"><?= e($concert['title']) ?></h1>
     </div>
 
     <div class="w-px self-stretch bg-[#a6a6a6]"></div>
 
-    <div class="flex shrink-0 flex-col gap-2.5">
+    <div class="w-[280px] shrink-0 flex-col gap-2.5 flex">
         <div class="flex items-center gap-3">
             <svg class="h-6 w-6 shrink-0 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
@@ -86,7 +86,7 @@
             <?php else: ?>
                 <?php foreach ($concert['zones'] as $z): ?>
                     <?php $remaining = (int) $z['remaining']; ?>
-                    <div class="rounded-lg border border-slate-200 bg-slate-100 px-4 py-3 shadow-sm">
+                    <div class="rounded-lg border border-slate-200 bg-[#F1F1F1] px-4 py-3 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-medium text-slate-900"><?= e($z['name']) ?></span>
                             <?php if ($remaining > 0): ?>
