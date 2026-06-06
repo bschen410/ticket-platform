@@ -86,7 +86,7 @@
             <?php else: ?>
                 <?php foreach ($concert['zones'] as $z): ?>
                     <?php $remaining = (int) $z['remaining']; ?>
-                    <div class="rounded-lg border border-slate-200 bg-slate-100 px-4 py-3 shadow-sm">
+                    <div class="rounded-lg border border-slate-200 bg-[#F1F1F1] px-4 py-3 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-medium text-slate-900"><?= e($z['name']) ?></span>
                             <?php if ($remaining > 0): ?>
