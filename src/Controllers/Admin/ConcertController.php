@@ -112,6 +112,7 @@ class ConcertController
             'venue'          => trim($input['venue'] ?? ''),
             'performed_at'   => to_datetime($input['performed_at'] ?? ''),
             'poster_url'     => trim($input['poster_url'] ?? ''),
+            'venue_map_url'  => trim($input['venue_map_url'] ?? ''),
             'program_intro'  => trim($input['program_intro'] ?? ''),
             'price_info'     => trim($input['price_info'] ?? ''),
             'notices'        => trim($input['notices'] ?? ''),

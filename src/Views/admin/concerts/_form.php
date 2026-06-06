@@ -63,6 +63,11 @@ $statusLabels = ['draft' => '草稿', 'on_sale' => '販售中', 'closed' => '已
     </div>
 
     <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700">場地圖網址</label>
+        <input type="url" name="venue_map_url" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none" value="<?= e($val('venue_map_url')) ?>" placeholder="https://...">
+    </div>
+
+    <div>
         <label class="mb-1 block text-sm font-medium text-slate-700">節目介紹</label>
         <textarea name="program_intro" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none" rows="3"><?= e($val('program_intro')) ?></textarea>
     </div>
