@@ -43,7 +43,7 @@
 
     <!-- 左側：Tab 內容 -->
     <div class="min-w-0 flex-1">
-        <div class="flex border-b border-slate-200">
+        <div class="flex border-b border-[#a6a6a6]">
             <button class="tab-btn border-b-2 border-slate-900 px-5 py-2 text-sm font-medium text-slate-900" data-tab="program">節目介紹</button>
             <button class="tab-btn border-b-2 border-transparent px-5 py-2 text-sm font-medium text-slate-500" data-tab="price">票價資訊</button>
             <button class="tab-btn border-b-2 border-transparent px-5 py-2 text-sm font-medium text-slate-500" data-tab="notices">注意事項</button>
