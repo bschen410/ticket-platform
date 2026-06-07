@@ -13,6 +13,24 @@ class ConcertController
         ], 'layouts/app');
     }
 
+    // 演唱會列表頁
+    public function list(): void
+    {
+        render('concerts/index', [
+            'concerts'   => Concert::onSaleList(),
+            'pageTitle'  => '演唱會',
+        ], 'layouts/app');
+    }
+
+    // 即將開賣頁
+    public function upcoming(): void
+    {
+        render('concerts/index', [
+            'concerts'   => Concert::upcomingList(),
+            'pageTitle'  => '即將開賣',
+        ], 'layouts/app');
+    }
+
     // 詳細頁：演唱會資訊 + 各區票價與剩餘
     public function show(int $id): void
     {

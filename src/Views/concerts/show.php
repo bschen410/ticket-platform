@@ -79,43 +79,53 @@
 
     <!-- 右側：票種選擇（固定顯示） -->
     <div class="w-[280px] shrink-0">
-        <h2 class="px-5 py-2 text-sm font-medium text-[#4b4b4b]">票種選擇</h2>
-        <div class="mt-4 space-y-3">
-            <?php if (empty($concert['zones'])): ?>
-                <p class="text-sm text-slate-400">尚未開放任何票區。</p>
-            <?php else: ?>
-                <?php foreach ($concert['zones'] as $z): ?>
-                    <?php $remaining = (int) $z['remaining']; ?>
-                    <div class="rounded-lg border border-slate-200 bg-[#F1F1F1] px-4 py-3 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-slate-900"><?= e($z['name']) ?></span>
-                            <?php if ($remaining > 0): ?>
-                                <span class="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">剩 <?= $remaining ?></span>
-                            <?php else: ?>
-                                <span class="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">售完</span>
-                            <?php endif; ?>
+        <?php if (($concert['status'] ?? '') === 'draft'): ?>
+            <div class="rounded-lg border border-slate-200 bg-[#F1F1F1] px-5 py-6 text-center">
+                <svg class="mx-auto mb-3 h-8 w-8 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <p class="text-sm font-medium text-[#4b4b4b]">尚未開賣</p>
+                <p class="mt-1 text-xs text-slate-400">票券即將開放，請持續關注。</p>
+            </div>
+        <?php else: ?>
+            <h2 class="px-5 py-2 text-sm font-medium text-[#4b4b4b]">票種選擇</h2>
+            <div class="mt-4 space-y-3">
+                <?php if (empty($concert['zones'])): ?>
+                    <p class="text-sm text-slate-400">尚未開放任何票區。</p>
+                <?php else: ?>
+                    <?php foreach ($concert['zones'] as $z): ?>
+                        <?php $remaining = (int) $z['remaining']; ?>
+                        <div class="rounded-lg border border-slate-200 bg-[#F1F1F1] px-4 py-3 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-slate-900"><?= e($z['name']) ?></span>
+                                <?php if ($remaining > 0): ?>
+                                    <span class="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">剩 <?= $remaining ?></span>
+                                <?php else: ?>
+                                    <span class="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">售完</span>
+                                <?php endif; ?>
+                            </div>
+                            <p class="mt-1 text-sm text-slate-600">NT$ <?= number_format((float) $z['price']) ?></p>
+                            <div class="mt-3">
+                                <?php if ($remaining <= 0): ?>
+                                    <button disabled class="w-full rounded-md bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-400 cursor-not-allowed">已售完</button>
+                                <?php elseif ($u === null): ?>
+                                    <a href="/login" class="block w-full rounded-md border border-slate-300 px-3 py-1.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50">登入後訂票</a>
+                                <?php else: ?>
+                                    <form method="post" action="/orders" class="flex items-center gap-2">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="concert_id" value="<?= (int) $concert['id'] ?>">
+                                        <input type="hidden" name="zone_id" value="<?= (int) $z['id'] ?>">
+                                        <input type="number" name="qty" value="1" min="1" max="<?= $remaining ?>"
+                                               class="w-16 rounded-md border border-slate-300 px-2 py-1.5 text-sm text-slate-900 focus:border-slate-500 focus:outline-none" aria-label="張數">
+                                        <button type="submit" class="flex-1 rounded-md bg-[#ea6d4a] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#d45f3c]">訂票</button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                        <p class="mt-1 text-sm text-slate-600">NT$ <?= number_format((float) $z['price']) ?></p>
-                        <div class="mt-3">
-                            <?php if ($remaining <= 0): ?>
-                                <button disabled class="w-full rounded-md bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-400 cursor-not-allowed">已售完</button>
-                            <?php elseif ($u === null): ?>
-                                <a href="/login" class="block w-full rounded-md border border-slate-300 px-3 py-1.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50">登入後訂票</a>
-                            <?php else: ?>
-                                <form method="post" action="/orders" class="flex items-center gap-2">
-                                    <?= csrf_field() ?>
-                                    <input type="hidden" name="concert_id" value="<?= (int) $concert['id'] ?>">
-                                    <input type="hidden" name="zone_id" value="<?= (int) $z['id'] ?>">
-                                    <input type="number" name="qty" value="1" min="1" max="<?= $remaining ?>"
-                                           class="w-16 rounded-md border border-slate-300 px-2 py-1.5 text-sm text-slate-900 focus:border-slate-500 focus:outline-none" aria-label="張數">
-                                    <button type="submit" class="flex-1 rounded-md bg-[#ea6d4a] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#d45f3c]">訂票</button>
-                                </form>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 
 </div>
