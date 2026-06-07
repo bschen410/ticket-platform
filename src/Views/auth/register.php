@@ -78,11 +78,11 @@ $form = $_SESSION['register_form'] ?? [];
                 <?php endif; ?>
             </div>
 
-            <button type="submit" class="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700">建立帳號</button>
+            <button type="submit" class="w-full rounded-lg bg-[#EA6D4A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700">建立帳號</button>
         </form>
 
         <div class="mt-6 text-center text-sm text-slate-600">
-            已有帳號？<a href="/login" class="font-semibold text-slate-900 hover:underline">立即登入</a>
+            已有帳號？<a href="/login" class="font-semibold text-[#EA6D4A] hover:underline">立即登入</a>
         </div>
     </div>
 </div>

@@ -47,11 +47,11 @@ $form = $_SESSION['login_form'] ?? [];
                 <?php endif; ?>
             </div>
 
-            <button type="submit" class="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700">登入</button>
+            <button type="submit" class="w-full rounded-lg bg-[#EA6D4A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700">登入</button>
         </form>
 
         <div class="mt-6 text-center text-sm text-slate-600">
-            還沒有帳號？<a href="/register" class="font-semibold text-slate-900 hover:underline">立即註冊</a>
+            還沒有帳號？<a href="/register" class="font-semibold text-[#EA6D4A] hover:underline">立即註冊</a>
         </div>
     </div>
 </div>
