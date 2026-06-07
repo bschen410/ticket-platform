@@ -44,8 +44,7 @@ $lightClass = $navTransparent ? '' : 'nav-light';
         <nav class="absolute left-1/2 -translate-x-1/2 flex gap-8 items-center">
             <a href="/"         class="nav-link font-manrope text-base transition-colors">首頁</a>
             <a href="/concerts" class="nav-link font-manrope text-base transition-colors">演唱會</a>
-            <a href="#"         class="nav-link font-manrope text-base transition-colors">音樂節</a>
-            <a href="#"         class="nav-link font-manrope text-base transition-colors">即將開售</a>
+            <a href="/upcoming" class="nav-link font-manrope text-base transition-colors">即將開賣</a>
         </nav>
 
         <div class="flex items-center gap-4">

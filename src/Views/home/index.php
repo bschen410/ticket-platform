@@ -216,7 +216,7 @@ $hasSlides = !empty($slides);
         <!-- Section header -->
         <div class="flex items-center justify-between mb-6">
             <h2 class="font-manrope font-semibold text-[#1a1a1a] text-2xl">節目資訊</h2>
-            <a href="/"
+            <a href="/concerts"
                class="bg-[#ea6d4a] text-white text-sm font-manrope font-semibold rounded-full px-5 py-2 hover:bg-[#d4603d] transition-colors">
                 更多 &nbsp;→
             </a>

@@ -21,6 +21,13 @@ class OrderController
             return;
         }
 
+        $concert = Concert::find($concertId);
+        if ($concert === null || $concert['status'] !== 'on_sale') {
+            flash('error', '此演唱會目前不開放訂票');
+            header('Location: /concerts/' . max($concertId, 0));
+            return;
+        }
+
         $pdo = db();
         $pdo->beginTransaction();
         try {

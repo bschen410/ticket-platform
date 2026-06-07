@@ -49,6 +49,8 @@ function match_route(string $method, string $uri, array $routes): ?array
 $routes = [
     // 演唱會瀏覽（B）
     ['GET',  '/',                           [ConcertController::class, 'index']],
+    ['GET',  '/concerts',                   [ConcertController::class, 'list']],
+    ['GET',  '/upcoming',                   [ConcertController::class, 'upcoming']],
     ['GET',  '/concerts/{id}',              [ConcertController::class, 'show']],
 
     // 帳號（A）

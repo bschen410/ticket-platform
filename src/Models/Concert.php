@@ -27,6 +27,17 @@ class Concert
         return $concert;
     }
 
+    // 即將開賣：草稿狀態，依演出時間排序
+    public static function upcomingList(): array
+    {
+        return query(
+            "SELECT id, title, venue, performed_at, poster_url, program_intro, price_info, notices
+               FROM concerts
+              WHERE status = 'draft'
+              ORDER BY performed_at ASC"
+        )->fetchAll();
+    }
+
     // 後台列表：所有狀態
     public static function all(): array
     {
