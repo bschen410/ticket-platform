@@ -6,10 +6,10 @@
 
     <h1 class="font-manrope font-bold text-[#1a1a1a] text-[32px] leading-tight"><?= e($pageTitle) ?></h1>
 
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-3">
 
         <!-- Search bar -->
-        <div class="relative w-[480px]">
+        <div class="relative w-full sm:w-[480px]">
             <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg class="w-5 h-5 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="2.5">
@@ -20,6 +20,7 @@
             <div class="absolute left-[46px] top-1/2 -translate-y-1/2 h-5 w-px bg-slate-300 pointer-events-none"></div>
             <input id="concert-search" type="search"
                    placeholder="搜尋演唱會、場館、藝人..."
+                   value="<?= e($_GET['q'] ?? '') ?>"
                    class="w-full h-12 bg-[#f6f6f6] rounded-full pl-[60px] pr-5 text-[#1a1a1a] text-sm font-inter
                           placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ea6d4a]/40 shadow-sm">
         </div>
@@ -60,7 +61,7 @@
     </p>
 
     <!-- ── GRID VIEW ─────────────────────────────────────────── -->
-    <div id="view-grid" class="grid grid-cols-3 gap-[14px]">
+    <div id="view-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[14px]">
         <?php foreach ($concerts as $c): ?>
             <a href="/concerts/<?= (int) $c['id'] ?>"
                data-title="<?= mb_strtolower(e($c['title'])) ?>"
@@ -116,9 +117,20 @@
     </div>
 
     <!-- ── LIST VIEW ─────────────────────────────────────────── -->
+    <style>
+        @media (max-width: 767px) {
+            #list-header-row { display: none !important; }
+            #view-list .concert-card { display: flex !important; align-items: center; gap: 12px; padding: 10px 0; }
+            #view-list .list-col-thumb { width: 64px; flex-shrink: 0; }
+            #view-list .list-col-title { flex: 1; min-width: 0; }
+            #view-list .list-col-date, #view-list .list-col-venue { display: none !important; }
+            #view-list .list-col-cta { padding-right: 0; }
+        }
+    </style>
     <div id="view-list" class="hidden flex-col">
         <!-- Header row -->
-        <div class="grid gap-4 px-4 pb-2 border-b border-[#d0d0d0] text-xs font-manrope font-semibold text-[#4b4b4b] uppercase tracking-wider"
+        <div id="list-header-row"
+             class="grid gap-4 px-4 pb-2 border-b border-[#d0d0d0] text-xs font-manrope font-semibold text-[#4b4b4b] uppercase tracking-wider"
              style="grid-template-columns: 80px 1fr 180px 160px 100px;">
             <span></span>
             <span>演唱會</span>
@@ -137,7 +149,7 @@
                style="grid-template-columns: 80px 1fr 180px 160px 100px;">
 
                 <!-- Thumbnail -->
-                <div class="shrink-0 w-[80px]">
+                <div class="list-col-thumb shrink-0 w-[80px]">
                     <?php if (!empty($c['poster_url'])): ?>
                         <img src="<?= e($c['poster_url']) ?>"
                              class="w-full h-auto block"
@@ -152,12 +164,12 @@
                 </div>
 
                 <!-- Title -->
-                <span class="font-manrope font-bold text-[#1a1a1a] text-base leading-tight line-clamp-1 pr-4">
+                <span class="list-col-title font-manrope font-bold text-[#1a1a1a] text-base leading-tight line-clamp-1 pr-4">
                     <?= e($c['title']) ?>
                 </span>
 
                 <!-- Date -->
-                <div class="flex items-center gap-2 text-[#4b4b4b] text-sm font-inter">
+                <div class="list-col-date flex items-center gap-2 text-[#4b4b4b] text-sm font-inter">
                     <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -169,7 +181,7 @@
                 </div>
 
                 <!-- Venue -->
-                <div class="flex items-center gap-2 text-[#4b4b4b] text-sm font-inter">
+                <div class="list-col-venue flex items-center gap-2 text-[#4b4b4b] text-sm font-inter">
                     <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -181,7 +193,7 @@
                 </div>
 
                 <!-- CTA -->
-                <div class="flex justify-end pr-4">
+                <div class="list-col-cta flex justify-end pr-4">
                     <span class="inline-flex items-center justify-center
                                  bg-[#ea6d4a] text-white text-sm font-manrope font-semibold
                                  rounded-full px-4 py-1.5 hover:bg-[#d4603d] transition-colors whitespace-nowrap">
@@ -231,6 +243,8 @@
     var cards    = document.querySelectorAll('.concert-card');
     var noResult = document.getElementById('no-results');
     if (!input) return;
+
+    if (input.value) input.dispatchEvent(new Event('input'));
 
     input.addEventListener('input', function () {
         var q = this.value.trim().toLowerCase();

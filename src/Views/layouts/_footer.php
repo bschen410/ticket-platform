@@ -1,8 +1,8 @@
 <footer class="bg-[#2b2b2b] border-t border-white/10">
-    <div class="max-w-[1440px] mx-auto px-8 py-16">
-        <div class="grid grid-cols-4 gap-12">
+    <div class="max-w-[1440px] mx-auto px-4 md:px-8 py-10 md:py-16">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
 
-            <div>
+            <div class="sm:col-span-2 lg:col-span-1">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="w-10 h-10 bg-[#ea6d4a] rounded-[10px] flex items-center justify-center shrink-0">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="border-t border-white/10 mt-12 pt-8 flex items-center justify-between">
+        <div class="border-t border-white/10 mt-10 md:mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-white/40 text-sm font-inter">© <?= date('Y') ?> JIOJIAN. All rights reserved.</p>
             <div class="flex gap-6">
                 <a href="#" class="text-white/40 text-sm font-inter hover:text-white/60 transition-colors">隱私權</a>

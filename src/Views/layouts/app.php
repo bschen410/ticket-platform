@@ -32,7 +32,7 @@ $bodyBg = ($navTransparent ?? false) ? 'bg-[#1c1c1c]' : 'bg-[#E3E3E3]';
 <?php require __DIR__ . '/_header.php'; ?>
 <?php require __DIR__ . '/_flash.php'; ?>
 
-<main <?= ($navTransparent ?? false) ? 'class="flex-1"' : 'class="flex-1 w-full pt-[88px] pb-16 px-8 max-w-[1440px] mx-auto"' ?>><?= $content ?></main>
+<main <?= ($navTransparent ?? false) ? 'class="flex-1"' : 'class="flex-1 w-full pt-[88px] pb-16 px-4 md:px-8 max-w-[1440px] mx-auto"' ?>><?= $content ?></main>
 
 <?php require __DIR__ . '/_footer.php'; ?>
 
