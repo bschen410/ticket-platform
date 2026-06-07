@@ -235,7 +235,7 @@ $hasSlides = !empty($slides);
                     <a href="/concerts/<?= (int) $c['id'] ?>"
                        data-title="<?= mb_strtolower(e($c['title'])) ?>"
                        data-venue="<?= mb_strtolower(e($c['venue'])) ?>"
-                       class="concert-card hover:bg-white rounded-[5px] overflow-hidden flex flex-col
+                       class="concert-card hover:bg-[#F1F1F1] rounded-[5px] overflow-hidden flex flex-col
                               hover:shadow-lg transition-all duration-200">
 
                         <!-- Poster image -->

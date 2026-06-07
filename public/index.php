@@ -64,6 +64,7 @@ $routes = [
     ['POST', '/orders',                     [OrderController::class, 'create']],
     ['GET',  '/orders/{id}',                [OrderController::class, 'show']],
     ['POST', '/orders/{id}/pay',            [OrderController::class, 'pay']],
+    ['GET',  '/orders/{id}/ticket',         [OrderController::class, 'ticket']],
     ['GET',  '/my/orders',                  [OrderController::class, 'mine']],
 
     // 管理員後台 — 演唱會 CRUD（B）

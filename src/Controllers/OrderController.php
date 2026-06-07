@@ -111,6 +111,24 @@ class OrderController
         header('Location: /orders/' . $id);
     }
 
+    // GET /orders/{id}/ticket — 電子票券頁（僅限已付款訂單）。
+    public function ticket(int $id): void
+    {
+        require_login();
+
+        $order = Order::findWithDetails($id);
+        if ($order === null || (int) $order['user_id'] !== (int) current_user()['id']) {
+            abort_404();
+        }
+
+        if ($order['status'] !== 'paid') {
+            header('Location: /orders/' . $id);
+            return;
+        }
+
+        render('orders/ticket', ['order' => $order]);
+    }
+
     // GET /my/orders — 我的訂單，分 pending / paid / expired。
     public function mine(): void
     {
@@ -131,7 +149,6 @@ class OrderController
         render('orders/mine', [
             'pending' => Order::findMineByStatus($uid, 'pending'),
             'paid'    => Order::findMineByStatus($uid, 'paid'),
-            'expired' => Order::findMineByStatus($uid, 'expired'),
         ]);
     }
 

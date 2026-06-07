@@ -231,9 +231,8 @@ $initialStep = $isPaid ? 3 : 1;
         </div>
     </div>
 
-    <!-- Electronic tickets -->
+    <!-- Ticket summary -->
     <div class="px-6 py-4">
-        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">電子票券</h2>
         <div class="divide-y divide-[#E0E0E0]">
             <?php foreach ($order['items'] as $item): ?>
             <div class="py-3">
@@ -249,16 +248,22 @@ $initialStep = $isPaid ? 3 : 1;
             </div>
             <?php endforeach; ?>
         </div>
-
         <div class="flex justify-between items-center pt-4 mt-2 border-t border-[#E0E0E0]">
             <span class="text-sm font-semibold text-gray-700">總計</span>
             <span class="text-xl font-bold font-manrope text-gray-900">NT$ <?= number_format((float) $order['total_amount']) ?></span>
         </div>
     </div>
 
-    <div class="px-6 py-4 bg-[#EBEBEB] border-t border-[#E0E0E0]">
-        <a href="/my/orders" class="block text-center text-sm font-semibold text-[#ea6d4a] hover:text-[#d85c38] transition-colors">
+    <div class="px-6 py-4 bg-[#EBEBEB] border-t border-[#E0E0E0] flex items-center justify-between gap-4">
+        <a href="/my/orders" class="text-sm text-gray-500 hover:text-gray-800 transition-colors">
             查看我的訂單
+        </a>
+        <a href="/orders/<?= (int) $order['id'] ?>/ticket"
+           class="inline-flex items-center gap-1.5 bg-[#ea6d4a] text-white text-sm font-semibold px-5 py-2 rounded-xl hover:bg-[#d85c38] transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+            </svg>
+            查看電子票券
         </a>
     </div>
 </div>

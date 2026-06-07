@@ -26,7 +26,7 @@ class Order
     public static function findWithDetails(int $id): ?array
     {
         $order = query(
-            'SELECT o.*, c.title AS concert_title, c.venue, c.performed_at,
+            'SELECT o.*, c.title AS concert_title, c.venue, c.performed_at, c.poster_url,
                     TIMESTAMPDIFF(SECOND, NOW(), o.expires_at) AS seconds_left
                FROM orders o
                JOIN concerts c ON c.id = o.concert_id
