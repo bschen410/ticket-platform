@@ -40,6 +40,12 @@ $lightClass = $navTransparent ? '' : 'nav-light';
     #main-nav .mobile-admin { color: #fcd34d; }
     #main-nav.nav-light .mobile-user  { color: #334155; }
     #main-nav.nav-light .mobile-admin { color: #d97706; }
+
+    /* Inline search input */
+    #nav-search-input { background: rgba(255,255,255,0.15); color: #fff; }
+    #nav-search-input::placeholder { color: rgba(255,255,255,0.5); }
+    #main-nav.nav-light #nav-search-input { background: rgba(0,0,0,0.07); color: #1a1a1a; }
+    #main-nav.nav-light #nav-search-input::placeholder { color: #94a3b8; }
 </style>
 
 <header id="main-nav"
@@ -47,9 +53,9 @@ $lightClass = $navTransparent ? '' : 'nav-light';
         style="transition: background 300ms ease; <?= $navInitBg ?>">
 
     <!-- Main bar -->
-    <div class="relative flex items-center justify-between <?= $navBarHeight ?> max-w-[1440px] mx-auto px-4 md:px-8">
+    <div class="relative flex items-center justify-between <?= $navBarHeight ?> max-w-[1440px] mx-auto px-4 md:px-8 gap-4">
 
-        <a href="/" class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3 shrink-0">
             <div class="w-10 h-10 bg-[#ea6d4a] rounded-[10px] flex items-center justify-center shrink-0">
                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
@@ -59,15 +65,33 @@ $lightClass = $navTransparent ? '' : 'nav-light';
         </a>
 
         <!-- Desktop nav -->
-        <nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 gap-8 items-center">
+        <nav id="nav-links" class="hidden md:flex absolute left-1/2 -translate-x-1/2 gap-8 items-center">
             <a href="/"         class="nav-link font-manrope text-base transition-colors">首頁</a>
             <a href="/concerts" class="nav-link font-manrope text-base transition-colors">演唱會</a>
             <a href="/upcoming" class="nav-link font-manrope text-base transition-colors">即將開賣</a>
         </nav>
 
+        <!-- Inline search form (hidden by default) -->
+        <form id="nav-search-form" action="/concerts" method="get"
+              style="display:none; flex:1;" class="items-center">
+            <div class="relative w-full">
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg class="w-4 h-4 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+                    </svg>
+                </div>
+                <input id="nav-search-input"
+                       type="search" name="q"
+                       placeholder="搜尋演唱會、場館、藝人..."
+                       autocomplete="off"
+                       class="w-full h-9 rounded-full pl-9 pr-4 text-sm font-inter focus:outline-none transition-colors"
+                       style="border: 1px solid rgba(255,255,255,0.2);">
+            </div>
+        </form>
+
         <!-- Desktop right actions -->
-        <div class="hidden md:flex items-center gap-4">
-            <button aria-label="搜尋" class="nav-icon transition-colors">
+        <div id="nav-actions-desktop" class="hidden md:flex items-center gap-4">
+            <button aria-label="搜尋" class="nav-search-btn nav-icon transition-colors">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
                 </svg>
@@ -89,8 +113,8 @@ $lightClass = $navTransparent ? '' : 'nav-light';
         </div>
 
         <!-- Mobile: search + hamburger -->
-        <div class="flex md:hidden items-center gap-3">
-            <button aria-label="搜尋" class="nav-icon transition-colors">
+        <div id="nav-actions-mobile" class="flex md:hidden items-center gap-3">
+            <button aria-label="搜尋" class="nav-search-btn nav-icon transition-colors">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
                 </svg>
@@ -104,6 +128,15 @@ $lightClass = $navTransparent ? '' : 'nav-light';
                 </svg>
             </button>
         </div>
+
+        <!-- Search close button (hidden by default) -->
+        <button id="nav-search-close" aria-label="關閉搜尋"
+                class="nav-icon shrink-0 transition-colors"
+                style="display:none; background:none; border:none; cursor:pointer; padding:4px;">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
     </div>
 
     <!-- Mobile menu panel -->
@@ -111,8 +144,7 @@ $lightClass = $navTransparent ? '' : 'nav-light';
         <nav class="flex flex-col">
             <a href="/"         class="mobile-link font-manrope text-base py-3 border-b transition-colors">首頁</a>
             <a href="/concerts" class="mobile-link font-manrope text-base py-3 border-b transition-colors">演唱會</a>
-            <a href="#"         class="mobile-link font-manrope text-base py-3 border-b transition-colors">音樂節</a>
-            <a href="#"         class="mobile-link font-manrope text-base py-3 border-b transition-colors">即將開售</a>
+            <a href="/upcoming" class="mobile-link font-manrope text-base py-3 border-b transition-colors">即將開賣</a>
         </nav>
         <div class="flex flex-col gap-3 pt-4">
             <?php if ($u): ?>
@@ -134,13 +166,13 @@ $lightClass = $navTransparent ? '' : 'nav-light';
 
 <script>
 (function () {
-    var btn  = document.getElementById('hamburger-btn');
-    var menu = document.getElementById('mobile-menu');
-    var nav  = document.getElementById('main-nav');
+    var hamburgerBtn  = document.getElementById('hamburger-btn');
+    var menu          = document.getElementById('mobile-menu');
+    var nav           = document.getElementById('main-nav');
     var hamburgerIcon = document.getElementById('hamburger-icon');
     var closeIcon     = document.getElementById('close-icon');
 
-    btn.addEventListener('click', function () {
+    hamburgerBtn.addEventListener('click', function () {
         var isOpen = menu.classList.toggle('open');
         hamburgerIcon.classList.toggle('hidden', isOpen);
         closeIcon.classList.toggle('hidden', !isOpen);
@@ -152,6 +184,42 @@ $lightClass = $navTransparent ? '' : 'nav-light';
             nav.style.borderBottom = '';
         }
         <?php endif; ?>
+    });
+
+    // Inline search toggle
+    var navLinks          = document.getElementById('nav-links');
+    var navActionsDesktop = document.getElementById('nav-actions-desktop');
+    var navActionsMobile  = document.getElementById('nav-actions-mobile');
+    var searchForm        = document.getElementById('nav-search-form');
+    var searchInput       = document.getElementById('nav-search-input');
+    var searchClose       = document.getElementById('nav-search-close');
+
+    function openSearch() {
+        navLinks.style.display          = 'none';
+        navActionsDesktop.style.display = 'none';
+        navActionsMobile.style.display  = 'none';
+        searchForm.style.display        = 'flex';
+        searchClose.style.display       = 'flex';
+        setTimeout(function () { searchInput.focus(); }, 30);
+    }
+
+    function closeSearch() {
+        navLinks.style.display          = '';
+        navActionsDesktop.style.display = '';
+        navActionsMobile.style.display  = '';
+        searchForm.style.display        = 'none';
+        searchClose.style.display       = 'none';
+        searchInput.value               = '';
+    }
+
+    document.querySelectorAll('.nav-search-btn').forEach(function (btn) {
+        btn.addEventListener('click', openSearch);
+    });
+
+    searchClose.addEventListener('click', closeSearch);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeSearch();
     });
 })();
 </script>

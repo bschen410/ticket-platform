@@ -40,16 +40,16 @@ $hasSlides = !empty($slides);
     <!-- Prev arrow -->
     <?php if (count($slides) > 1): ?>
     <button id="hero-prev" aria-label="上一個"
-            class="absolute left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-10">
-        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-10">
+        <svg class="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
     </button>
 
     <!-- Next arrow -->
     <button id="hero-next" aria-label="下一個"
-            class="absolute right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-10">
-        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            class="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-10">
+        <svg class="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
         </svg>
     </button>
@@ -57,8 +57,8 @@ $hasSlides = !empty($slides);
 
     <!-- Concert info overlay -->
     <?php if ($hasSlides): ?>
-        <div class="absolute bottom-[88px] left-[100px] max-w-[900px]">
-            <div id="hero-meta" class="flex items-center gap-8 text-white/80 text-base font-inter mb-4 transition-opacity duration-300">
+        <div class="absolute bottom-5 left-4 md:bottom-[88px] md:left-[100px] max-w-[calc(100%-2rem)] md:max-w-[900px]">
+            <div id="hero-meta" class="flex flex-wrap items-center gap-4 md:gap-8 text-white/80 text-sm md:text-base font-inter mb-3 md:mb-4 transition-opacity duration-300">
                 <span class="flex items-center gap-3">
                     <svg class="w-6 h-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -80,14 +80,14 @@ $hasSlides = !empty($slides);
             <a id="hero-link" href="/concerts/<?= (int)$slides[0]['id'] ?>">
                 <h1 id="hero-title"
                     class="font-manrope font-bold text-[#a63f21] leading-none tracking-[-2.4px] transition-opacity duration-300 hover:opacity-80"
-                    style="font-size: clamp(48px, 5.5vw, 96px);">
+                    style="font-size: clamp(28px, 5.5vw, 96px);">
                     <?= e($slides[0]['title']) ?>
                 </h1>
             </a>
         </div>
     <?php else: ?>
-        <div class="absolute bottom-[88px] left-[100px]">
-            <p class="font-manrope font-bold text-white/30 text-5xl">目前尚無演唱會</p>
+        <div class="absolute bottom-5 left-4 md:bottom-[88px] md:left-[100px]">
+            <p class="font-manrope font-bold text-white/30 text-3xl md:text-5xl">目前尚無演唱會</p>
         </div>
     <?php endif; ?>
 
@@ -195,8 +195,8 @@ $hasSlides = !empty($slides);
 <section class="bg-[#e3e3e3] pb-20">
 
     <!-- Search bar -->
-    <div class="flex justify-center pt-[51px] px-[180px]">
-        <div class="relative w-[509px]">
+    <div class="flex justify-center pt-8 md:pt-[51px] px-4 md:px-8">
+        <div class="relative w-full max-w-[509px]">
             <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg class="w-5 h-5 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
@@ -211,7 +211,7 @@ $hasSlides = !empty($slides);
     </div>
 
     <!-- Events grid -->
-    <div class="max-w-[1440px] mx-auto px-[180px] mt-12">
+    <div class="max-w-[1440px] mx-auto px-4 md:px-8 xl:px-[180px] mt-8 md:mt-12">
 
         <!-- Section header -->
         <div class="flex items-center justify-between mb-6">
@@ -230,7 +230,7 @@ $hasSlides = !empty($slides);
             <p id="no-results" class="hidden rounded-lg bg-white/70 px-5 py-4 text-sm text-[#4b4b4b] font-inter">
                 找不到符合的演唱會。
             </p>
-            <div id="concerts-grid" class="grid grid-cols-3 gap-[14px]">
+            <div id="concerts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[14px]">
                 <?php foreach ($concerts as $c): ?>
                     <a href="/concerts/<?= (int) $c['id'] ?>"
                        data-title="<?= mb_strtolower(e($c['title'])) ?>"

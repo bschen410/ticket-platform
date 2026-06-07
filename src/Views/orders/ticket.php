@@ -53,7 +53,8 @@
                     filter: drop-shadow(0 8px 24px rgba(0,0,0,0.10));
                     display: flex;
                     background: #F1F1F1;
-                ">
+
+">
                     <!-- Orange accent bar -->
                     <div style="width: 5px; background: #EA6D4A; flex-shrink: 0;"></div>
 

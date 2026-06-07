@@ -15,14 +15,14 @@
     <div class="flex h-[464px] w-full items-center justify-center rounded-2xl bg-slate-900 text-6xl text-white shadow-sm">🎟️</div>
 <?php endif; ?>
 
-<div class="mt-6 flex items-center gap-8">
+<div class="mt-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
     <div class="flex-1">
         <h1 class="font-manrope text-[28px] font-bold leading-tight text-[#4b4b4b]"><?= e($concert['title']) ?></h1>
     </div>
 
-    <div class="w-px self-stretch bg-[#a6a6a6]"></div>
+    <div class="hidden md:block w-px self-stretch bg-[#a6a6a6]"></div>
 
-    <div class="w-[280px] shrink-0 flex-col gap-2.5 flex">
+    <div class="w-full md:w-[280px] md:shrink-0 flex-col gap-2.5 flex">
         <div class="flex items-center gap-3">
             <svg class="h-6 w-6 shrink-0 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
@@ -39,7 +39,7 @@
     </div>
 </div>
 
-<div class="mt-10 flex gap-8">
+<div class="mt-10 flex flex-col md:flex-row gap-6 md:gap-8">
 
     <!-- 左側：Tab 內容 -->
     <div class="min-w-0 flex-1">
@@ -78,7 +78,7 @@
     </div>
 
     <!-- 右側：票種選擇（固定顯示） -->
-    <div class="w-[280px] shrink-0">
+    <div class="w-full md:w-[280px] md:shrink-0">
         <?php if (($concert['status'] ?? '') === 'draft'): ?>
             <div class="rounded-lg border border-slate-200 bg-[#F1F1F1] px-5 py-6 text-center">
                 <svg class="mx-auto mb-3 h-8 w-8 text-[#ea6d4a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
