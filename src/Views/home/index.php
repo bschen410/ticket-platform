@@ -57,8 +57,8 @@ $hasSlides = !empty($slides);
 
     <!-- Concert info overlay -->
     <?php if ($hasSlides): ?>
-        <div class="absolute bottom-5 left-4 md:bottom-[88px] md:left-[100px] max-w-[calc(100%-2rem)] md:max-w-[900px]">
-            <div id="hero-meta" class="flex flex-wrap items-center gap-4 md:gap-8 text-white/80 text-sm md:text-base font-inter mb-3 md:mb-4 transition-opacity duration-300">
+        <div class="absolute bottom-5 left-4 md:bottom-[88px] md:left-[100px] max-w-[calc(100%-2rem)] md:max-w-[1240px]">
+            <div id="hero-meta" class="flex flex-wrap items-center justify-start gap-4 md:gap-8 text-white/80 text-sm md:text-base font-inter mb-3 md:mb-4 transition-opacity duration-300">
                 <span class="flex items-center gap-3">
                     <svg class="w-6 h-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -77,9 +77,9 @@ $hasSlides = !empty($slides);
                     <span id="hero-date"><?= e(date('Y.m.d', strtotime($slides[0]['performed_at']))) ?></span>
                 </span>
             </div>
-            <a id="hero-link" href="/concerts/<?= (int)$slides[0]['id'] ?>">
+            <a id="hero-link" href="/concerts/<?= (int)$slides[0]['id'] ?>" class="inline-block">
                 <h1 id="hero-title"
-                    class="font-manrope font-bold text-[#a63f21] leading-none tracking-[-2.4px] transition-opacity duration-300 hover:opacity-80"
+                    class="font-manrope font-bold text-[#a63f21] leading-none tracking-[-2.4px] transition-opacity duration-300 hover:opacity-80 text-left"
                     style="font-size: clamp(28px, 5.5vw, 96px);">
                     <?= e($slides[0]['title']) ?>
                 </h1>
@@ -231,7 +231,7 @@ $hasSlides = !empty($slides);
                 找不到符合的演唱會。
             </p>
             <div id="concerts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[14px]">
-                <?php foreach ($concerts as $c): ?>
+                <?php foreach (array_slice($concerts, 0, 6) as $c): ?>
                     <a href="/concerts/<?= (int) $c['id'] ?>"
                        data-title="<?= mb_strtolower(e($c['title'])) ?>"
                        data-venue="<?= mb_strtolower(e($c['venue'])) ?>"
